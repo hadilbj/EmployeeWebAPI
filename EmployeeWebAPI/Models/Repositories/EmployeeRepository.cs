@@ -57,9 +57,9 @@ namespace EmployeeWebAPI.Models.Repositories
         }
 
 
-        public Task<Employee> GetEmployeeByEmail(string email)
+        public async Task<Employee> GetEmployeeByEmail(string email)
         {
-            throw new NotImplementedException();
+            return await appDbContext.Employees.FirstOrDefaultAsync(e => e.Email == email);
         }
 
 
