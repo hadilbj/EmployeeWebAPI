@@ -50,26 +50,23 @@ namespace EmployeeWebAPI.Controllers
         {
             try
             {
-                if (employee == null)
+                if (!ModelState.IsValid)
                 {
-                    return BadRequest();
+                    return BadRequest(ModelState);
+                }
+
+                var emp = await employeeRepository.GetEmployeeByEmail(employee.Email);
+                if (emp != null)
+                {
+                    ModelState.AddModelError("email", "Employee email already in use");
+                    return BadRequest(ModelState);
                 }
                 else
-                // Add custom model validation error
                 {
-                    var emp = await employeeRepository.GetEmployeeByEmail(employee.Email);
-                    if (emp != null)
-                    {
-                        ModelState.AddModelError("email", "Employee email already in use");
-                        return BadRequest(ModelState);
-                    }
-                    else
-                    {
-                        var createdEmployee = await employeeRepository.AddEmployee(employee);
-                        return CreatedAtAction(nameof(GetEmployee), new { id = createdEmployee.EmployeeId },
-                        createdEmployee);
-                    }
+                    var createdEmployee = await employeeRepository.AddEmployee(employee);
+                    return CreatedAtAction(nameof(GetEmployee), new { id = createdEmployee.EmployeeId }, createdEmployee);
                 }
+
             }
             catch (Exception)
             {
@@ -94,6 +91,40 @@ namespace EmployeeWebAPI.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error updating data");
+            }
+        }
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<Employee>> DeleteEmployee(int id)
+        {
+            try
+            {
+                var employeeToDelete =await employeeRepository.GetEmployee(id);
+                if (employeeToDelete == null)
+                {
+                    return NotFound($"Employee with Id = {id} not found");
+                }
+                return await employeeRepository.DeleteEmployee(id);
+            }
+            catch(Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting data");
+            }
+        }
+        [HttpGet("{search}")]
+        public async Task<ActionResult<IEnumerable<Employee>>> Search (string name, Gender? gender)
+        {
+            try
+            {
+                var result = await employeeRepository.Search(name, gender);
+                if (result.Any())
+                {
+                    return Ok(result);
+                }
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
             }
         }
     }

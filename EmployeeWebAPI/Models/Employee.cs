@@ -5,7 +5,7 @@ namespace EmployeeWebAPI.Models
     public class Employee
     {
         public int EmployeeId { get; set; }
-        [Required]
+        
         [StringLength(100, MinimumLength = 2)]
         public string FirstName { get; set; }
         [Required]
@@ -14,7 +14,7 @@ namespace EmployeeWebAPI.Models
         public string Email { get; set; }
         public DateTime DateOfBrith { get; set; }
         public Gender Gender { get; set; }
-        public int DepartementId { get; set; }
+        public int DepartmentId { get; set; }
         public string PhotoPath { get; set; }
         public Department Department { get; set; }
     }

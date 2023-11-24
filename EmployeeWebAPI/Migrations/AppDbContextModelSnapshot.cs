@@ -31,7 +31,6 @@ namespace EmployeeWebAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentId"), 1L, 1);
 
                     b.Property<string>("DepartmentName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DepartmentId");
@@ -50,9 +49,6 @@ namespace EmployeeWebAPI.Migrations
                     b.Property<DateTime>("DateOfBrith")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DepartementId")
-                        .HasColumnType("int");
-
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
@@ -61,7 +57,6 @@ namespace EmployeeWebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -73,7 +68,6 @@ namespace EmployeeWebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhotoPath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EmployeeId");

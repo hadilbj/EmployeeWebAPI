@@ -33,7 +33,7 @@ namespace EmployeeWebAPI.Models.Repositories
                 result.Email = employee.Email;
                 result.DateOfBrith = employee.DateOfBrith;
                 result.Gender = employee.Gender;
-                result.DepartementId = employee.DepartementId;
+                result.DepartmentId = employee.DepartmentId;
                 result.PhotoPath = employee.PhotoPath;
 
                 await appDbContext.SaveChangesAsync();
@@ -54,6 +54,20 @@ namespace EmployeeWebAPI.Models.Repositories
             }
             return null;
 
+        }
+
+        public async Task<IEnumerable<Employee>> Search(string name, Gender? gender)
+        {
+            IQueryable<Employee> query = appDbContext.Employees;
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(e => e.FirstName.Contains(name) || e.LastName.Contains(name));
+            }
+            if (gender!= null)
+            {
+                query = query.Where(e => e.Gender == gender);
+            }
+            return await query.ToListAsync();
         }
 
 
